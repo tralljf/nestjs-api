@@ -1,0 +1,42 @@
+version: '3'
+services:
+  core-crypto-converion:
+    build: .
+    entrypoint: ./.docker/entrypoint.sh
+    # entrypoint: dockerize -wait tcp://db:5432 -timeout 40s ./.docker/entrypoint.sh
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 3001:3001
+    volumes:
+      - .:/home/node/app
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  db:
+    build: ./.docker/mysql
+    restart: always
+    tty: true
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./.docker/dbdata:/var/lib/mysql
+      - ./.docker/mysql:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - app-network
+
+  redis:
+    image: redis
+    container_name: redis-container
+    ports:
+      - '6379:6379'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
