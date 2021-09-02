@@ -8,10 +8,8 @@ export class CreateOrderBook1630537284364 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'int',
+            type: 'varchar',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'exchange',
@@ -21,12 +19,12 @@ export class CreateOrderBook1630537284364 implements MigrationInterface {
           {
             name: 'sell_rate',
             isNullable: true,
-            type: 'decimal(5,0)',
+            type: 'decimal(14,2)',
           },
           {
             name: 'buy_rate',
             isNullable: true,
-            type: 'decimal(5,0)',
+            type: 'decimal(14,2)',
           },
           {
             name: 'sell_book',

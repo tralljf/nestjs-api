@@ -8,7 +8,6 @@ import { HealthController } from './configs/health/health.controller';
 import { LoggerModule } from './configs/log/logger.module';
 import { TasksModule } from './tasks/tasks.module';
 import { OrderBookModule } from './order-book/order-book.module';
-import { OrderBookController } from './order-book/order-book.controller';
 
 @Module({
   imports: [
@@ -36,7 +35,7 @@ import { OrderBookController } from './order-book/order-book.controller';
     TasksModule,
     OrderBookModule,
   ],
-  controllers: [HealthController, OrderBookController],
+  controllers: [HealthController],
   providers: [],
 })
 export class AppModule {}
