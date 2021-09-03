@@ -32,7 +32,7 @@ import { OrderBookModule } from './order-book/order-book.module';
     ScheduleModule.forRoot(),
     TerminusModule,
     LoggerModule,
-    TasksModule,
+    // TasksModule,
     OrderBookModule,
   ],
   controllers: [HealthController],
