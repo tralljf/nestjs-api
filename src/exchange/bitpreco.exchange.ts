@@ -37,6 +37,7 @@ export class BitPrecoExchange implements ExchangeBase {
       buy_book: '',
       sell_book: '',
       exchange: 'Bitpreco',
+      currency: 'BTCBRL',
     };
   }
 }

@@ -10,9 +10,16 @@ export class CreateOrderBook1630537284364 implements MigrationInterface {
             name: 'id',
             type: 'varchar',
             isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
           },
           {
             name: 'exchange',
+            isNullable: true,
+            type: 'varchar',
+          },
+          {
+            name: 'currency',
             isNullable: true,
             type: 'varchar',
           },

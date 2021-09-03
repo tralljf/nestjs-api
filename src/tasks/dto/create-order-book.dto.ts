@@ -4,4 +4,5 @@ export class CreateOrderBookDto {
   sell_book: string;
   buy_book: string;
   exchange: string;
+  currency: string;
 }

@@ -22,8 +22,6 @@ export class TasksService {
     private readonly binanceExchange: BinanceExchange,
   ) {}
 
-  private readonly TARGET = 10000;
-
   saveDatabase(createOrderBookDto: CreateOrderBookDto): Promise<TaskOrderBook> {
     const orderBook = new TaskOrderBook();
     orderBook.exchange = createOrderBookDto.exchange;
@@ -31,11 +29,12 @@ export class TasksService {
     orderBook.buy_rate = createOrderBookDto.buy_rate;
     orderBook.sell_book = createOrderBookDto.sell_book;
     orderBook.sell_rate = createOrderBookDto.sell_rate;
+    orderBook.currency = createOrderBookDto.currency;
 
     return this.orderBookRepository.save(orderBook);
   }
 
-  saveChache(data, exchange) {
+  saveCache(data, exchange) {
     const idempData = new IdempData();
     idempData.bodyRequest = JSON.stringify(data);
 
@@ -48,7 +47,7 @@ export class TasksService {
   }
 
   @Cron(CronExpression.EVERY_5_SECONDS)
-  async handleCron() {
+  async workerBitpreco() {
     const res = await this.bitprecoExchange.bind(
       () =>
         this.quotesService.getQuotes(
@@ -63,12 +62,16 @@ export class TasksService {
       buy_book: res.buy_book,
       sell_book: res.sell_book,
       exchange: res.exchange,
+      currency: res.currency,
     };
 
-    this.saveChache(data, res.exchange);
+    this.saveCache(data, 'exchange');
     this.saveDatabase(data);
+  }
 
-    const respBinance = await this.binanceExchange.bind(
+  @Cron(CronExpression.EVERY_5_SECONDS)
+  async workerBinance() {
+    const res = await this.binanceExchange.bind(
       () =>
         this.quotesService.getQuotes(
           'https://api.binance.com/api/v3/depth?symbol=BTCBRL',
@@ -77,14 +80,15 @@ export class TasksService {
     );
 
     let dataBinance = {
-      buy_rate: respBinance.buy_rate,
-      sell_rate: respBinance.sell_rate,
-      buy_book: respBinance.buy_book,
-      sell_book: respBinance.sell_book,
-      exchange: respBinance.exchange,
+      buy_rate: res.buy_rate,
+      sell_rate: res.sell_rate,
+      buy_book: res.buy_book,
+      sell_book: res.sell_book,
+      exchange: res.exchange,
+      currency: res.currency,
     };
 
-    this.saveChache(dataBinance, respBinance.exchange);
+    this.saveCache(dataBinance, 'exchange');
     this.saveDatabase(dataBinance);
   }
 }

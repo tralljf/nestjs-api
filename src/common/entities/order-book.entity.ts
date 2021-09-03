@@ -16,4 +16,7 @@ export abstract class OrderBookBase extends BaseEntity {
 
   @Column()
   exchange: string;
+
+  @Column()
+  currency: string;
 }

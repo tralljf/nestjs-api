@@ -37,6 +37,7 @@ export class BinanceExchange extends ExchangeBase {
       buy_book: '',
       sell_book: '',
       exchange: 'Binance',
+      currency: 'BTCBRL',
     };
   }
 }

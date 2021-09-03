@@ -16,10 +16,10 @@ import { OrderBookModule } from './order-book/order-book.module';
       envFilePath: environment.fileName(),
     }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
       host: 'db',
-      port: 3306,
-      username: 'root',
+      port: 5432,
+      username: 'postgres',
       password: 'root',
       database: 'crypto',
       autoLoadEntities: true,

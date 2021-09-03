@@ -15,7 +15,7 @@ export class OrderBookController {
   async findAll(): Promise<OrderBookDto | any> {
     try {
       return this.orderBookservice
-        .findCache('Bitpreco')
+        .findCache('exchange')
         .then()
         .catch(() => this.orderBookservice.findLast());
     } catch (err) {

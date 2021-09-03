@@ -10,7 +10,7 @@ interface Asks {
   id: string;
 }
 
-export interface Bitpreco {
+export interface IBitpreco {
   success: boolean;
   bids: Bids[];
   asks: Asks[];

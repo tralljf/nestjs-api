@@ -1,0 +1,5 @@
+CREATE USER crypto;
+
+CREATE DATABASE crypto;
+GRANT ALL PRIVILEGES ON DATABASE crypto TO crypto;
+

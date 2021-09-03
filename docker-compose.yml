@@ -16,18 +16,43 @@ services:
       - db
 
   db:
-    build: ./.docker/mysql
-    restart: always
+    build: ./.docker/postgres
     tty: true
-    ports:
-      - '3306:3306'
-    volumes:
-      - ./.docker/dbdata:/var/lib/mysql
-      - ./.docker/mysql:/docker-entrypoint-initdb.d
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      - POSTGRES_DB=crypto
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - ./.docker/dbdata:/var/lib/postgresql/data
+    ports:
+      - '5433:5432'
     networks:
       - app-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com.br
+      - PGADMIN_DEFAULT_PASSWORD=123456
+    ports:
+      - '9000:80'
+    networks:
+      - app-network
+
+  # db:
+  #   build: ./.docker/mysql
+  #   restart: always
+  #   tty: true
+  #   ports:
+  #     - '3306:3306'
+  #   volumes:
+  #     - ./.docker/dbdata:/var/lib/mysql
+  #     - ./.docker/mysql:/docker-entrypoint-initdb.d
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=root
+  #   networks:
+  #     - app-network
 
   redis:
     image: redis
