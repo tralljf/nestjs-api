@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { environment } from './configs/environment';
 import { HealthController } from './configs/health/health.controller';
 import { LoggerModule } from './configs/log/logger.module';
-import { TasksModule } from './tasks/tasks.module';
 import { OrderBookModule } from './order-book/order-book.module';
 
 @Module({
@@ -32,7 +31,6 @@ import { OrderBookModule } from './order-book/order-book.module';
     ScheduleModule.forRoot(),
     TerminusModule,
     LoggerModule,
-    // TasksModule,
     OrderBookModule,
   ],
   controllers: [HealthController],
