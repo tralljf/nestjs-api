@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QuotesService } from 'src/common/http';
 import { Repository } from 'typeorm';
 import { CreateOrderBookDto } from './dto/create-order-book.dto';
-import { TaskOrderBook } from './task-order-book.entity';
+import { TaskOrderBook } from './entities/task-order-book.entity';
 import { IdempService } from 'src/common/idempotency/idemp.service';
 import { IdempData } from 'src/common/idempotency/idemp.cache';
 import { BitPrecoExchange } from './../exchange/bitpreco.exchange';
@@ -25,21 +25,27 @@ export class TasksService {
   saveDatabase(createOrderBookDto: CreateOrderBookDto): Promise<TaskOrderBook> {
     const orderBook = new TaskOrderBook();
     orderBook.exchange = createOrderBookDto.exchange;
-    orderBook.buy_book = createOrderBookDto.buy_book;
-    orderBook.buy_rate = createOrderBookDto.buy_rate;
-    orderBook.sell_book = createOrderBookDto.sell_book;
-    orderBook.sell_rate = createOrderBookDto.sell_rate;
+    orderBook.final_price = createOrderBookDto.final_price;
     orderBook.currency = createOrderBookDto.currency;
+    orderBook.deepth_amount = createOrderBookDto.deepth_amount;
+    orderBook.sell_price = createOrderBookDto.sell_price;
+    orderBook.exchange_sell_book = createOrderBookDto.exchange_sell_book;
+    orderBook.exchange_top_sell_price =
+      createOrderBookDto.exchange_top_sell_price;
+    orderBook.buy_price = createOrderBookDto.buy_price;
+    orderBook.exchange_buy_book = createOrderBookDto.exchange_buy_book;
+    orderBook.exchange_top_buy_price =
+      createOrderBookDto.exchange_top_buy_price;
 
     return this.orderBookRepository.save(orderBook);
   }
 
-  saveCache(data, exchange) {
+  saveCache(data, key) {
     const idempData = new IdempData();
     idempData.bodyRequest = JSON.stringify(data);
 
     idempData.bodyResponse = JSON.stringify(data);
-    idempData.idempotencyKey = exchange;
+    idempData.idempotencyKey = key;
 
     this.idempService
       .put(idempData)
@@ -57,38 +63,46 @@ export class TasksService {
     );
 
     let data = {
-      buy_rate: res.buy_rate,
-      sell_rate: res.sell_rate,
-      buy_book: res.buy_book,
-      sell_book: res.sell_book,
       exchange: res.exchange,
+      final_price: res.final_price,
       currency: res.currency,
+      deepth_amount: res.deepth_amount,
+      sell_price: res.sell_price,
+      exchange_sell_book: res.exchange_sell_book,
+      exchange_top_sell_price: res.exchange_top_sell_price,
+      buy_price: res.buy_price,
+      exchange_buy_book: res.exchange_buy_book,
+      exchange_top_buy_price: res.exchange_top_buy_price,
     };
 
-    this.saveCache(data, 'exchange');
+    this.saveCache(data, res.currency);
     this.saveDatabase(data);
   }
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
-  async workerBinance() {
-    const res = await this.binanceExchange.bind(
-      () =>
-        this.quotesService.getQuotes(
-          'https://api.binance.com/api/v3/depth?symbol=BTCBRL',
-        ),
-      10000,
-    );
+  // @Cron(CronExpression.EVERY_5_SECONDS)
+  // async workerBinance() {
+  //   const res = await this.binanceExchange.bind(
+  //     () =>
+  //       this.quotesService.getQuotes(
+  //         'https://api.binance.com/api/v3/depth?symbol=BTCBRL',
+  //       ),
+  //     10000,
+  //   );
 
-    let dataBinance = {
-      buy_rate: res.buy_rate,
-      sell_rate: res.sell_rate,
-      buy_book: res.buy_book,
-      sell_book: res.sell_book,
-      exchange: res.exchange,
-      currency: res.currency,
-    };
+  //   let data = {
+  //     exchange: res.exchange,
+  //     final_price: res.final_price,
+  //     currency: res.currency,
+  //     deepth_amount: res.deepth_amount,
+  //     sell_price: res.sell_price,
+  //     exchange_sell_book: res.exchange_sell_book,
+  //     exchange_top_sell_price: res.exchange_top_sell_price,
+  //     buy_price: res.buy_price,
+  //     exchange_buy_book: res.exchange_buy_book,
+  //     exchange_top_buy_price: res.exchange_top_buy_price,
+  //   };
 
-    this.saveCache(dataBinance, 'exchange');
-    this.saveDatabase(dataBinance);
-  }
+  //   this.saveCache(data, res.currency);
+  //   this.saveDatabase(data);
+  // }
 }

@@ -1,8 +1,12 @@
 export class CreateOrderBookDto {
-  sell_rate: number;
-  buy_rate: number;
-  sell_book: string;
-  buy_book: string;
   exchange: string;
+  final_price: number;
   currency: string;
+  deepth_amount: number;
+  sell_price: number;
+  exchange_sell_book: string;
+  exchange_top_sell_price: number;
+  buy_price: number;
+  exchange_buy_book: string;
+  exchange_top_buy_price: number;
 }

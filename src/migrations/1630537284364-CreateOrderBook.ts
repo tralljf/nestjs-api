@@ -4,7 +4,7 @@ export class CreateOrderBook1630537284364 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'order_book',
+        name: 'prices',
         columns: [
           {
             name: 'id',
@@ -19,29 +19,49 @@ export class CreateOrderBook1630537284364 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'final_price',
+            isNullable: true,
+            type: 'decimal(14,2)',
+          },
+          {
             name: 'currency',
             isNullable: true,
             type: 'varchar',
           },
           {
-            name: 'sell_rate',
+            name: 'deepth_amount',
             isNullable: true,
             type: 'decimal(14,2)',
           },
           {
-            name: 'buy_rate',
+            name: 'sell_price',
             isNullable: true,
             type: 'decimal(14,2)',
           },
           {
-            name: 'sell_book',
+            name: 'exchange_sell_book',
             isNullable: true,
             type: 'varchar',
           },
           {
-            name: 'buy_book',
+            name: 'exchange_top_sell_price',
+            isNullable: true,
+            type: 'decimal(14,2)',
+          },
+          {
+            name: 'buy_price',
+            isNullable: true,
+            type: 'decimal(14,2)',
+          },
+          {
+            name: 'exchange_buy_book',
             isNullable: true,
             type: 'varchar',
+          },
+          {
+            name: 'exchange_top_buy_price',
+            isNullable: true,
+            type: 'decimal(14,2)',
           },
           {
             name: 'created_at',
@@ -54,6 +74,6 @@ export class CreateOrderBook1630537284364 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('order_book');
+    await queryRunner.dropTable('prices');
   }
 }

@@ -2,17 +2,26 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class OrderBookDto {
   @ApiProperty()
-  sell_rate: number;
+  currency: string;
 
   @ApiProperty()
-  buy_rate: number;
+  deepth_amount: number;
 
   @ApiProperty()
-  sell_book: string;
+  sell_price: number;
 
   @ApiProperty()
-  buy_book: string;
+  exchange_sell_book: string;
 
   @ApiProperty()
-  exchange: string;
+  exchange_top_sell_price: number;
+
+  @ApiProperty()
+  buy_price: number;
+
+  @ApiProperty()
+  exchange_buy_book: string;
+
+  @ApiProperty()
+  exchange_top_buy_price: number;
 }
